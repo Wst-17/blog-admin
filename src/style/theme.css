@@ -1,0 +1,51 @@
+:root {
+  /* ============ 主色 ============ */
+  --el-color-primary: #316c72;
+  --el-color-primary-light-3: #5a8a8f;
+  --el-color-primary-light-5: #84a8ac;
+  --el-color-primary-light-7: #adc6c8;
+  --el-color-primary-light-8: #c2d4d5;
+  --el-color-primary-light-9: #d6e2e3;
+  --el-color-primary-dark-2: #27565b;
+
+  /* ============ 信息色 ============ */
+  --el-color-info: #2080f0;
+  --el-color-info-light-3: #5aa2f5;
+  --el-color-info-light-5: #8cbef8;
+  --el-color-info-light-7: #bfd9fb;
+  --el-color-info-light-8: #d5e6fc;
+  --el-color-info-light-9: #eaeffd;
+  --el-color-info-dark-2: #1a66c0;
+
+  /* ============ 成功色 ============ */
+  --el-color-success: #18a058;
+  --el-color-success-light-3: #4fbd7f;
+  --el-color-success-light-5: #83cda4;
+  --el-color-success-light-7: #b7ddc9;
+  --el-color-success-light-8: #d1e7db;
+  --el-color-success-light-9: #e8f3ed;
+  --el-color-success-dark-2: #138046;
+
+  /* ============ 警告色 ============ */
+  --el-color-warning: #f0a020;
+  --el-color-warning-light-3: #f4b84f;
+  --el-color-warning-light-5: #f7cb83;
+  --el-color-warning-light-7: #f9ddb7;
+  --el-color-warning-light-8: #fbe7d1;
+  --el-color-warning-light-9: #fdf3e8;
+  --el-color-warning-dark-2: #c0801a;
+
+  /* ============ 错误色 ============ */
+  --el-color-error: #d03050;
+  --el-color-error-light-3: #dd5d78;
+  --el-color-error-light-5: #e58ba0;
+  --el-color-error-light-7: #edb8c7;
+  --el-color-error-light-8: #f1cfda;
+  --el-color-error-light-9: #f6e6ea;
+  --el-color-error-dark-2: #a62640;
+}
+
+/* 暗黑模式（<html class="dark">） */
+html.dark {
+  --el-color-primary: #5a8a8f;   /* 暗黑模式下主色稍微亮一点 */
+}
