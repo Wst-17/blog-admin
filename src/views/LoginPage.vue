@@ -18,7 +18,7 @@ const { query } = useRoute()
 const title = import.meta.env.VITE_TITLE
 
 // 使用mock模式
-const isMock = import.meta.env.VITE_USE_MOCK === 'ture'
+const isMock = import.meta.env.VITE_USE_MOCK === 'true'
 
 //1.准备表单对象
 // Mock 模式预填账号

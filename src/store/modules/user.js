@@ -7,6 +7,7 @@
 // })
 import api from '@/api'
 import { defineStore } from 'pinia'
+import { convertImgUrl } from '@/utils'
 export const useUserStore = defineStore('user', {
   state: () => ({
     userInfo: {

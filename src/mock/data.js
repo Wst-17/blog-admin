@@ -2,7 +2,7 @@
 // menus / resources / roles / pages / config 与后端初始化的默认数据保持一致, 保证动态路由和权限页面可用
 
 // 图片用本仓库 images/ 目录下的图片(GitHub 直接提供), 不依赖第三方示例图站点
-const IMG_BASE = 'https://raw.githubusercontent.com/szluyu99/gin-vue-blog/main/images'
+const IMG_BASE = 'https://api.dicebear.com/7.x/avataaars/svg?seed='
 export const SAMPLE_IMG = `${IMG_BASE}/common/header.jpeg`
 
 // 菜单 (动态路由数据源, 字段与 /menu/list 一致)
@@ -918,7 +918,7 @@ export const roles = [
     name: 'admin',
     label: '管理员',
     is_disable: false,
-    created_at: '2024-01-01T10:00:00.000Z',
+    created_at: '2026-01-01T10:00:00.000Z',
     resource_ids: [
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
       27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
@@ -933,7 +933,7 @@ export const roles = [
     name: 'guest',
     label: '游客',
     is_disable: false,
-    created_at: '2024-01-01T10:00:00.000Z',
+    created_at: '2026-01-01T10:00:00.000Z',
     resource_ids: [
       15, 16, 23, 26, 27, 30, 31, 34, 37, 40, 41, 42, 45, 46, 49, 51, 54, 58, 59, 62, 63, 64, 66,
       71,

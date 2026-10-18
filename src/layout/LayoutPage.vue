@@ -1,5 +1,5 @@
 <script setup>
-import Breadcrumb from './header/Breadcrumb.vue';
+import Appheader from '@/layout/header/index.vue'
 
 
 </script>
@@ -9,7 +9,9 @@ import Breadcrumb from './header/Breadcrumb.vue';
         <el-container>
             <el-aside width="200px">Aside</el-aside>
             <el-container>
-                <el-header>Header</el-header>
+                <el-header>
+                    <Appheader></Appheader>
+                </el-header>
                 <el-main>
                     <RouterView></RouterView>
                 </el-main>
