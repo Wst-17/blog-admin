@@ -9,6 +9,7 @@ import '@/style/theme.css'
 
 import { setupStore } from '@/store'
 import { setupRouter } from '@/router'
+import { setupMock } from './utils/request.js'
 
 async function bootstrap() {
   const app = createApp(App)
@@ -26,10 +27,12 @@ async function bootstrap() {
   // 3. 安装 Pinia（这里 setupStore 内部会执行 app.use(pinia)）
   setupStore(app)
 
-  // 4. 安装路由（⚠️ 必须加 await，等动态路由和守卫都装好）
+  // 4.关键：在执行路由和发请求前，安装 Mock 拦截器
+  await setupMock()
+  // 5. 安装路由（⚠️ 必须加 await，等动态路由和守卫都装好）
   await setupRouter(app)
 
-  // 5. 最后挂载
+  // 6. 最后挂载
   app.mount('#app')
 }
 

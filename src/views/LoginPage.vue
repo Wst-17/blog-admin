@@ -10,24 +10,22 @@ import { addDynamicRoutes } from '@/router'
 import { useAuthStore, useUserStore } from '@/store'
 import { getLocal, removeLocal, setLocal } from '@/utils'
 
-// const userStore = useUserStore()
-// const authStore = useAuthStore()
+const userStore = useUserStore()
+const authStore = useAuthStore()
 
-// const router = useRouter()
-// const route = useRoute()
-
-
-
-//从环境变量中读
+const router = useRouter()
+const { query } = useRoute()
 const title = import.meta.env.VITE_TITLE
+
 // 使用mock模式
 const isMock = import.meta.env.VITE_USE_MOCK === 'ture'
 
 //1.准备表单对象
 // Mock 模式预填账号
 const loginForm = ref({
-    account: isMock ? 'guest' : '',
+    username: isMock ? 'guest' : '',
     password: isMock ? '123456' : ''
+
 })
 // 2.表单规则
 const rules = {
@@ -39,64 +37,75 @@ const rules = {
         { min: 6, max: 14, message: '密码长度为6-14', trigger: 'blur' }
     ]
 }
-// const loginFormRef = ref(null)
-// const isRemember = ref(false)
+
+const loginFormRef = ref()
 // const loading = ref(false)
 
-// // 初始化：从 localStorage 回填“记住我”
-// onMounted(() => {
-//     const localLoginInfo = getLocal('loginInfo')
-//     if (localLoginInfo) {
-//         loginForm.username = localLoginInfo.username
-//         loginForm.password = localLoginInfo.password
-//         isRemember.value = true // 回填时勾选记住我
-//     }
-// })
+initLoginInfo()
 
-// async function handleLogin() {
-//     if (!loginFormRef.value) return
+// 从 localStorage 中获取记住的用户名和密码
+function initLoginInfo() {
+    const localLoginInfo = getLocal('loginInfo')
+    if (localLoginInfo) {
+        loginForm.value.username = localLoginInfo.username
+        loginForm.value.password = localLoginInfo.password
+    }
+}
 
-//     await loginFormRef.value.validate(async (valid) => {
-//         if (!valid) return
+// Reactive LocalStorage/SessionStorage - vueuse
+//useStorage() 把普通的响应式数据（ref）和浏览器的本地存储（localStorage 或 sessionStorage）绑定在一起。
+const isRemember = useStorage('isRemember', false)
+const loading = ref(false)
 
-//         const { username, password } = loginForm
-//         const doLogin = async () => {
-//             loading.value = true
-//             try {
-//                 // 1. 登录接口
-//                 const resp = await api.login({ username, password })
-//                 authStore.setToken(resp.data.token)
+async function handleLogin() {
+    const { username, password } = loginForm.value
+    if (!username || !password) {
+        ElMessage({
+            message: '请输入用户名和密码',
+            type: 'warning',
+        })
+        return
+    }
 
-//                 // 2. 拉用户信息 + 动态路由
-//                 await userStore.getUserInfo()
-//                 await addDynamicRoutes()
+    const doLogin = async (username, password) => {
+        loading.value = true
 
-//                 // 3. 处理“记住我”（修复了原代码直接赋值覆盖 Ref 的 bug）
-//                 if (isRemember.value) {
-//                     setLocal('loginInfo', { username, password })
-//                 } else {
-//                     removeLocal('loginInfo')
-//                 }
-//                 ElMessage.success('登录成功')
+        // 登录接口
+        try {
+            const resp = await api.login({ username, password })
+            authStore.setToken(resp.data.token)
 
-//                 // 4. 跳转
-//                 const redirect = route.query.redirect
-//                 if (redirect) {
-//                     router.replace({ path: redirect })
-//                 } else {
-//                     router.replace('/')
-//                 }
-//             } catch (err) {
-//                 console.error('登录失败：', err)
-//                 ElMessage.error(err?.message || '登录失败')
-//             } finally {
-//                 loading.value = false
-//             }
-//         }
+            await userStore.getUserInfo()
+            await addDynamicRoutes()
 
-//         doLogin()
-//     })
-// }
+            // isRemember 是 useStorage 返回的 Ref, 必须取 .value:
+            // 直接判断 Ref 恒为真, 取消勾选也会把账号密码存进 localStorage
+            isRemember.value ? setLocal('loginInfo', { username, password }) : removeLocal('loginInfo')
+
+            ElMessage({
+                message: '登录成功',
+                type: 'success',
+                // plain: true,
+            })
+
+            // 页面跳转: 根据 URL 中的 redirect 进行跳转
+            if (query.redirect) {
+                const path = query.redirect
+                Reflect.deleteProperty(query, 'redirect') // 从对象身上删除属性
+                router.push({ path, query })
+            }
+            else {
+                router.push('/')
+            }
+        }
+        finally {
+            loading.value = false
+        }
+    }
+
+    // doLogin 里只有 try/finally, 失败时的 rejection 需要在这里兜住
+    doLogin(username, password).catch(err => console.error(err))
+}
 </script>
 
 
@@ -122,6 +131,7 @@ const rules = {
 
                 <!-- Element Plus 表单 -->
                 <!-- 注意：ref 和 :model 配合，rules 用于校验 -->
+                <!-- ref 点击按钮时通过ref获取el-form实例进行整体校验 -->
                 <el-form ref="loginFormRef" :model="loginForm" :rules="rules" class="login-form" size="large">
                     <!-- 用户名 -->
                     <el-form-item label="账号" prop="username">
@@ -135,9 +145,9 @@ const rules = {
                     </el-form-item>
 
                     <!-- 密码 -->
-                    <el-form-item label="密码" prop="password" maxlength="20" show-password>
+                    <el-form-item label="密码" prop="password" maxlength="20">
                         <!-- @keyup.enter="handleLogin" -->
-                        <el-input type="password" placeholder="请输入密码" v-model="loginForm.password">
+                        <el-input type="password" placeholder="请输入密码" v-model="loginForm.password" show-password>
                             <template #prefix>
                                 <el-icon>
                                     <Lock />
@@ -149,14 +159,14 @@ const rules = {
                     <!-- 记住我 -->
                     <el-form-item>
 
-                        <el-checkbox>记住我</el-checkbox>
+                        <el-checkbox v-model="isRemember">记住我</el-checkbox>
                         <!-- v-model="isRemember" -->
                     </el-form-item>
 
                     <!-- 登录按钮 -->
                     <el-form-item>
-                        <el-button type="primary" class="login-button">
-                            <!--  :loading="loading" @click="handleLogin" -->
+                        <el-button type="primary" class="login-button" @click="handleLogin" :loading="loading">
+                            <!--   -->
                             登录
                         </el-button>
                     </el-form-item>

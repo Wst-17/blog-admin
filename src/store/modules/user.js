@@ -5,6 +5,7 @@
 //   getters: { ... },         // 派生数据（只读）
 //   actions: { ... },         // 修改数据的方法
 // })
+import api from '@/api'
 import { defineStore } from 'pinia'
 export const useUserStore = defineStore('user', {
   state: () => ({
