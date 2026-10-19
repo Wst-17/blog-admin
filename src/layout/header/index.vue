@@ -1,5 +1,5 @@
 <script setup>
-import BreadCrumb from './components/Breadcrumb.vue'
+import BreadCrumb from './components/BreadCrumb.vue'
 import FullScreen from './components/FullScreen.vue'
 // import GithubSite from './components/GithubSite.vue'
 import MenuCollapse from './components/MenuCollapse.vue'
@@ -43,6 +43,7 @@ import UserAvatar from './components/UserAvatar.vue'
     width: 100%;
     height: 100%;
     padding: 0 16px;
+    border: 1px solid #e5e7eb;
 }
 
 .header-left {
