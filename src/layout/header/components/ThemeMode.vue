@@ -1,5 +1,6 @@
 <script setup>
 import { useThemeStore } from '@/store'
+import { Moon } from '@element-plus/icons-vue';
 
 const themeStore = useThemeStore()
 
@@ -9,8 +10,8 @@ const themeStore = useThemeStore()
 <template>
     <el-icon size="18" @click="themeStore.switchDarkMode">
         <el-icon>
-            <Sunny v-if="themeStore.darkMode" />
-            <Moon v-else />
+            <Moon v-if="themeStore.darkMode" />
+            <Sunny v-else />
         </el-icon>
 
     </el-icon>

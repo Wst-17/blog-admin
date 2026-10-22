@@ -586,7 +586,16 @@ const handlers = [
       return ok()
     },
   ],
-
+  // 模拟文件上传接口
+  [
+    'POST',
+    /^\/upload$/,
+    (params, body) => {
+      // 模拟随机返回一张新图片（使用 DiceBear 头像生成器）
+      const mockUrl = '/src/assets/img/hmbb.jpg'
+      return ok({ url: mockUrl })
+    },
+  ],
   // 网站设置
   ['GET', /^\/config$/, () => ok(state.config)],
   [

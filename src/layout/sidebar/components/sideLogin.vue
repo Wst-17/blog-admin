@@ -27,6 +27,7 @@ const title = import.meta.env.VITE_TITLE
 .logo-container {
     // 去除下划线
     text-decoration: none;
+    margin: 8px，0px;
 }
 
 .logo-icon-wrapper {

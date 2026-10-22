@@ -17,6 +17,7 @@ const permissionStore = usePermissionStore()
 const tagStore = useTagStore()
 
 // 🌟 2. 必须改成 path！Element Plus 的 default-active 匹配的是 path（也就是 index）
+// 计算出当前应该在左侧菜单里点亮（高亮）哪一个菜单项
 const activeKey = computed(() => curRoute.meta?.activeMenu || curRoute.path)
 
 const menuOptions = computed(() => {
@@ -25,7 +26,6 @@ const menuOptions = computed(() => {
         .sort((a, b) => a.order - b.order)
 })
 
-const menuRef = ref(null)
 
 function resolvePath(basePath, path) {
     if (isExternal(path)) return path
@@ -46,6 +46,7 @@ function getMenuItem(route, basePath = '') {
         order: route.meta?.order || 0,
         children: []
     }
+    // 拿到当前路由下，所有“有名字”且“没被隐藏”的子路由
     const visibleChildren = route.children?.filter(e => e.name && !e.isHidden) ?? []
 
     if (!visibleChildren.length) return menuItem
@@ -102,8 +103,9 @@ function handleMenuSelect(index, indexPath, item) {
         window.open(index, '_blank', 'noopener,noreferrer')
         return
     }
+    // 防抖（防止重复点击）
     if (index === curRoute.path) return
-
+    // 更新标签缓存
     if (!tagStore.tags.some(e => e.path === index)) {
         tagStore.updateAliveKey(item.key || index)
     }
@@ -119,7 +121,7 @@ function isExternal(path) {
     <!-- 🌟 4. 补充 router 和 unique-opened 属性 -->
     <!--router 让菜单点击直接触发路由跳转 -->
     <!-- unique-opened当你点击“用户管理”时，Element Plus 会自动把“文章管理”收起来。这样侧边栏永远保持清爽，视觉焦点永远只有一个。 -->
-    <el-menu ref="menuRef" :default-active="activeKey" class="side-menu" router unique-opened @select="handleMenuSelect"
+    <el-menu :default-active="activeKey" class="side-menu" router unique-opened @select="handleMenuSelect"
         :collapse="themeStore.collapsed" :collapse-transition="false">
         <template v-for="item in menuOptions" :key="item.path">
             <!-- 有子菜单 -->
@@ -152,4 +154,53 @@ function isExternal(path) {
 
 <style lang="scss" scoped>
 /* 你的样式保留即可 */
+/* 去除菜单默认的右边框和背景 */
+.side-menu {
+    border-right: none;
+
+}
+
+:deep(.el-sub-menu__title),
+:deep(.el-menu-item) {
+    height: 48px;
+    line-height: 48px;
+    margin: 4px, 12px;
+    border-radius: 6px;
+    // 把元素的背景色设置为“透明”加上了 !important 才能强行把它的底色剥掉
+    background-color: transparent !important;
+    border-left: 4px solid transparent;
+}
+
+// 鼠标悬停的样式
+:deep(.el-menu-item:hover),
+:deep(.el-sub-menu__title:hover) {
+    background-color: #f2f2f5 !important;
+    color: var(--el-color-primary);
+}
+
+// 选中（Active）状态
+:deep(.el-menu-item.is-active) {
+    background-color: #f0f4f4 !important;
+    color: var(--el-color-primary);
+    // 左侧粗条
+    border-left: 4px solid var(--el-color-primary);
+    font-weight: 600;
+
+}
+
+/* 4. 修复选中时图标颜色 */
+:deep(.el-menu-item.is-active .el-icon) {
+    color: var(--el-color-primary);
+}
+
+/* 5. 子菜单缩进调整（让二级菜单看起来更紧凑） */
+:deep(.el-sub-menu .el-menu-item) {
+    padding-left: 48px;
+    /* 给二级菜单留出缩进空间 */
+}
+
+/* 6. 展开的父级菜单（有子菜单的那个）文字颜色 */
+:deep(.el-sub-menu.is-active > .el-sub-menu__title) {
+    color: var(--el-color-primary);
+}
 </style>

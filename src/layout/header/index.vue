@@ -43,7 +43,7 @@ import UserAvatar from './components/UserAvatar.vue'
     width: 100%;
     height: 100%;
     padding: 0 16px;
-    border: 1px solid #e5e7eb;
+
 }
 
 .header-left {
