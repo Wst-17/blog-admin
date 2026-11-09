@@ -28,6 +28,10 @@ export default defineConfig({
       logger: true, // 控制台打印 mock 请求日志，方便调试
     }),
   ],
+  build: {
+    // 告诉 Vite 使用 esbuild 进行 CSS 压缩，绕过 LightningCSS 的兼容问题
+    cssMinify: 'esbuild',
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
