@@ -146,7 +146,7 @@ async function handleUpdateDisable(row) {
 
 }
 
-:depp(.el-input) {
+:deep(.el-input) {
     --el-input-width: 200px
 }
 
