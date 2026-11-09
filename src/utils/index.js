@@ -1,5 +1,5 @@
 // import { Icon } from '@iconify/vue'
-import dayjs from 'day.js'
+import dayjs from 'dayjs'
 // import { h } from 'vue'
 
 export * from './error-report.js'
