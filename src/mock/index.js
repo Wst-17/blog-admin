@@ -296,11 +296,14 @@ const handlers = [
     'PUT',
     /^\/article\/top$/,
     (params, body) => {
+      // console.log('后端收到了：', body)
+      // console.log('转换后的ID：', Number(body.id))
       const article = state.articles.find((e) => e.id === Number(body.id))
       if (!article) {
         return fail('文章不存在')
       }
       article.is_top = body.is_top
+      console.log('Mock存进去了，当前文章的状态：', article)
       return ok()
     },
   ],
@@ -348,7 +351,10 @@ const handlers = [
     'GET',
     /^\/category\/list$/,
     (params) => {
-      const list = filterList(state.categories, params, { name: (e) => e.name }).map((e) => ({
+      const list = filterList(state.categories, params, {
+        keyword: (e) => e.name,
+        name: (e) => e.name,
+      }).map((e) => ({
         ...e,
         Articles: null,
         article_count: state.articles.filter((a) => a.category_id === e.id).length,
